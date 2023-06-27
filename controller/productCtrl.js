@@ -57,12 +57,23 @@ const productDelete = asyncHandler(async (req, res) => {
 const getaProduct = asyncHandler(async (req, res) => {
     const { id } = req.params
     try {
-        const getProduct = await Product.findById(id)
+        const getProduct = await Product.findById(id).populate("color").populate("ratings.postedBy")
         res.json(getProduct)
     } catch (e) {
         throw new Error(e)
     }
 })
+
+const getProductRating =  asyncHandler(async (req, res) => {
+    try {
+        const getProduct = await Product.find({  ratings: { $exists: true, $ne: [] },
+            $expr: { $gt: [{ $size: "$ratings" }, 0] } }).populate("ratings.postedBy")
+        res.json(getProduct)
+    } catch (e) {
+        throw new Error(e)
+    }
+})
+
 
 //  get products
 const getProduct = asyncHandler(async (req, res) => {
@@ -213,5 +224,5 @@ module.exports = {
     productDelete,
     addwishList,
     totalratings,
-    
+    getProductRating
 }

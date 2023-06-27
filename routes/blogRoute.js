@@ -10,7 +10,7 @@ router.post("/createBlog",authMiddleware, isAdmin, createBlog) // create blog en
 router.put('/upload/:id' , authMiddleware, isAdmin , uploadPhoto.array('images',2), blogImgResize, uploadImages )
 router.put("/updateBlog/:id",authMiddleware, isAdmin, updateBlog) // simple update blog end point
 router.put("/:id",authMiddleware, isAdmin, getBlog) // get blog and then update a blog by id
-router.get("/allBlogs",authMiddleware, isAdmin, allBlogs) // get all blogs
-router.get("/:id",authMiddleware, isAdmin, getABlog) // get all blogs
+router.get("/allBlogs", allBlogs) // get all blogs
+router.get("/:id", getABlog) // get all blogs
 router.delete("/:id",authMiddleware, isAdmin, deleteBlog) // delete a blog 
 module.exports = router
