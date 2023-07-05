@@ -2,6 +2,8 @@ const express = require('express')
 const  app = express()
 const dotenv = require('dotenv').config();
 const Port = process.env.PORT || 5000
+const AWS = require("aws-sdk");
+const s3 = new AWS.S3()
 
 const dbConnect = require('./config/dbConn')
 dbConnect()
@@ -42,6 +44,28 @@ app.use('/api/upload', uploadRouter)
 
 app.use(notfound)
 app.use(errorHandler)
+
+await s3.putObject({
+    Body: JSON.stringify({key:"value"}),
+    Bucket: "cyclic-funny-pink-suit-eu-west-2",
+    Key: "some_files/my_file.json",
+}).promise()
+
+// get it back
+let my_file = await s3.getObject({
+    Bucket: "cyclic-funny-pink-suit-eu-west-2",
+    Key: "some_files/my_file.json",
+}).promise()
+
+console.log(JSON.parse(my_file))
+
+
+
+
+
+
+
+
 
 app.listen(Port, () =>{
     console.log(`Server is running on ${Port}`)
