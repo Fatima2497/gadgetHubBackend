@@ -15,7 +15,7 @@ const uploadImages = asyncHandler(async (req, res) => {
         images = urls.map((file) => {
           return { secure_url: file.secure_url, public_id: file.public_id };
         });
-        fs.unlinkSync(path);
+        // fs.unlinkSync(path);
       }
     }
     res.json(images); // Respond with the array of image URLs
