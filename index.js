@@ -45,24 +45,33 @@ app.use('/api/upload', uploadRouter)
 app.use(notfound)
 app.use(errorHandler)
 
-await s3.putObject({
-    Body: JSON.stringify({key:"value"}),
-    Bucket: "cyclic-funny-pink-suit-eu-west-2",
-    Key: "some_files/my_file.json",
-}).promise()
-
-// get it back
-let my_file = await s3.getObject({
-    Bucket: "cyclic-funny-pink-suit-eu-west-2",
-    Key: "some_files/my_file.json",
-}).promise()
-
-console.log(JSON.parse(my_file))
 
 
+AWS.config.update({
+    region: process.env.AWS_REGION,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    sessionToken: process.env.AWS_SESSION_TOKEN,
+  });
 
-
-
+const getObjectFromS3 = async () => {
+    try {
+      const params = {
+        Bucket: "cyclic-funny-pink-suit-eu-west-2",
+        Key: "some_files/my_file.json",
+      };
+  
+      const response = await s3.getObject(params).promise();
+      const content = response.Body.toString("utf-8");
+      const parsedContent = JSON.parse(content);
+  
+      console.log(parsedContent);
+    } catch (error) {
+      console.error("Error retrieving object from S3:", error);
+    }
+  };
+  
+  getObjectFromS3();
 
 
 
